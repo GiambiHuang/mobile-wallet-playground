@@ -1,0 +1,22 @@
+.wallets {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.wallet {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+button {
+  padding: 8px 12px;
+  border-radius: 4px;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
