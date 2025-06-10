@@ -11,6 +11,11 @@
   justify-content: space-between;
 }
 
+.infos {
+  max-width: 90vw;
+  font-size: 12px;
+}
+
 button {
   padding: 8px 12px;
   border-radius: 4px;

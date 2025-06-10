@@ -11,7 +11,7 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import {
-  sepolia,
+  arbitrumSepolia,
 } from 'wagmi/chains';
 import {
   QueryClientProvider,
@@ -29,7 +29,16 @@ const wallets = [
 const config = getDefaultConfig({
   appName: 'My RainbowKit App',
   projectId: 'YOUR_PROJECT_ID',
-  chains: [sepolia],
+  chains: [
+    {
+      ...arbitrumSepolia,
+      rpcUrls: {
+        default: {
+          http: ['https://arbitrum-sepolia-rpc.publicnode.com'],
+        },
+      }
+    }
+  ],
   ssr: false, // If your dApp uses server side rendering (SSR)
 });
 

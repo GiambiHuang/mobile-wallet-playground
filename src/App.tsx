@@ -1,10 +1,10 @@
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
-import './App.css'
 import { useAccount, useWalletClient } from 'wagmi';
 import { encodeFunctionData, parseUnits, zeroAddress } from 'viem';
 import { useState } from 'react';
+import './App.css'
 
 function App() {
   const { signMessage } = useSolanaWallet();
@@ -17,8 +17,9 @@ function App() {
   const handleSignMessage = async () => {
     const message = new TextEncoder().encode(address ?? zeroAddress);
     try {
-      const signature = await signMessage?.(message)
-      setSignature(signature ? Buffer.from(signature).toString('base64') : '');
+      const signature = await signMessage?.(message);
+      
+      setSignature(signature ? btoa(String.fromCharCode(...signature)) : '');
       setTxhash('');
       setError('');
     } catch (error) {
@@ -39,13 +40,13 @@ function App() {
         outputs: [{ name: '', type: 'bool' }],
       }],
       functionName: 'transfer',
-      args: [address ?? zeroAddress, parseUnits('0.1', 6)],
+      args: [address ?? zeroAddress, parseUnits('0.1', 18)],
     });
 
     try {
       if (walletClient && address) {
         const txHash = await walletClient?.sendTransaction({
-          to: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238', // testnet usdc
+          to: '0xb1D4538B4571d411F07960EF2838Ce337FE1E80E', // testnet chainlink token
           data,
           value: 0n,
           account: address,
@@ -60,12 +61,14 @@ function App() {
   return (
     <div className="wallets">
       <div className="wallet">
+        {/* {'solana wallet connection'} */}
         <WalletMultiButton />
         <button className="sign" onClick={handleSignMessage} disabled={!address}>
           Sign Message
         </button>
       </div>
       <div className="wallet">
+        {/* {'ethereum wallet connection'} */}
         <ConnectButton />
         <button className="call" onClick={handleCall} disabled={!signature}>
           Call function
