@@ -11,7 +11,6 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import {
-  mainnet,
   sepolia,
 } from 'wagmi/chains';
 import {
