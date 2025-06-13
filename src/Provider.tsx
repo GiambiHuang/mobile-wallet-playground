@@ -11,7 +11,7 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import {
-  arbitrumSepolia,
+  arbitrum,
 } from 'wagmi/chains';
 import {
   QueryClientProvider,
@@ -31,10 +31,10 @@ const config = getDefaultConfig({
   projectId: 'YOUR_PROJECT_ID',
   chains: [
     {
-      ...arbitrumSepolia,
+      ...arbitrum,
       rpcUrls: {
         default: {
-          http: ['https://arbitrum-sepolia-rpc.publicnode.com'],
+          http: ['https://arbitrum-one-rpc.publicnode.com'],
         },
       }
     }

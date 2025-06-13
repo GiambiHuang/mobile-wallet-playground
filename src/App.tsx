@@ -2,7 +2,7 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
 import { useAccount, useWalletClient } from 'wagmi';
-import { encodeFunctionData, parseUnits, zeroAddress } from 'viem';
+import { getContract, parseUnits, zeroAddress } from 'viem';
 import { useState } from 'react';
 import './App.css'
 
@@ -28,30 +28,28 @@ function App() {
   }
 
   const handleCall = async () => {
-    const data = encodeFunctionData({
-      abi: [{
-        type: 'function',
-        name: 'transfer',
-        stateMutability: 'nonpayable',
-        inputs: [
-          { name: 'to', type: 'address' },
-          { name: 'value', type: 'uint256' },
-        ],
-        outputs: [{ name: '', type: 'bool' }],
-      }],
-      functionName: 'transfer',
-      args: [address ?? zeroAddress, parseUnits('0.1', 18)],
-    });
-
     try {
       if (walletClient && address) {
-        const txHash = await walletClient?.sendTransaction({
-          to: '0xb1D4538B4571d411F07960EF2838Ce337FE1E80E', // testnet chainlink token
-          data,
-          value: 0n,
-          account: address,
-        });
-        setTxhash(txHash);
+        const contract = getContract({
+          abi: [{
+            type: 'function',
+            name: 'transfer',
+            stateMutability: 'nonpayable',
+            inputs: [
+              { name: 'to', type: 'address' },
+              { name: 'value', type: 'uint256' },
+            ],
+            outputs: [{ name: '', type: 'bool' }],
+          }],
+          address: '0xb1D4538B4571d411F07960EF2838Ce337FE1E80E',
+          client: walletClient,
+        })
+
+        const tx = await contract.write.transfer([
+          address, // myself
+          parseUnits('0.001', 18)
+        ])
+        setTxhash(tx);
       }
     } catch (err) {
       setError(err?.toString() ?? '');
@@ -75,7 +73,7 @@ function App() {
         </button>
       </div>
       <div className="infos">
-        {[signature, txhash, error].filter(Boolean).map(msg => <p>{msg}</p>)}
+        {[signature, txhash, error].filter(Boolean).map(msg => <p key={msg}>{msg}</p>)}
       </div>
     </div>
   )
